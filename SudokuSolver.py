@@ -54,10 +54,10 @@ class Application(tk.Frame):
 
 		self.create_widgets()
 		self.draw_grid()
-		self.__draw_puzzle()
+		self.draw_puzzle()
 
-		self.board.bind("<Button-1>", self.__cell_clicked)
-		self.board.bind("<Key>", self.__key_pressed) 
+		self.board.bind("<Button-1>", self.cell_clicked)
+		self.board.bind("<Key>", self.key_pressed) 
 
 	def draw_grid(self):
 		for num in range (0,10):
@@ -123,16 +123,16 @@ class Application(tk.Frame):
 			command=self.clear)
 		self.clear.pack(fill="both",side="bottom")
 
-	def __cell_clicked(self, event):
+	def cell_clicked(self, event):
 		self.board.delete("error")
 		x, y = event.x, event.y
 		if (MARGIN < x < WIDTH - MARGIN and MARGIN < y < HEIGHT - MARGIN):
 			self.board.focus_set()
 			row, col = (y - MARGIN) / SIDE, (x - MARGIN) / SIDE
 			self.row, self.col = row, col
-		self.__draw_cursor()
+		self.draw_cursor()
 
-	def __draw_cursor(self):
+	def draw_cursor(self):
 		self.board.delete("cursor")
 		if int(self.row) >= 0 and int(self.col) >= 0:
 			x0 = MARGIN + int(self.col) * SIDE + 1
@@ -144,14 +144,14 @@ class Application(tk.Frame):
 				outline="#ff3b00", tags="cursor", width=4
 			)
 
-	def __key_pressed(self, event):
+	def key_pressed(self, event):
 		if int(self.row) >= 0 and int(self.col) >= 0 and event.char in "1234567890":
 			self.puzzle[int(self.row)][int(self.col)] = int(float(event.char))
 			self.col, self.row = -1, -1
-			self.__draw_puzzle()
-			self.__draw_cursor()
+			self.draw_puzzle()
+			self.draw_cursor()
 
-	def __draw_puzzle(self):
+	def draw_puzzle(self):
 		self.board.delete("numbers")
 		for i in range(0,9):
 			for j in range(0,9):
@@ -163,7 +163,7 @@ class Application(tk.Frame):
 						x, y, text=self.puzzle[i][j], tags="numbers", fill=color, font="Consalos"
 					)
 
-	def __draw_error(self):
+	def draw_error(self):
 		x0 = y0 = MARGIN + SIDE * 2
 		x1 = y1 = MARGIN + SIDE * 7
 		self.board.create_oval(
@@ -274,19 +274,19 @@ class Application(tk.Frame):
 
 	def clear(self):
 		self.puzzle = self.deepCopy(self.original)
-		self.__draw_puzzle()
+		self.draw_puzzle()
 		
 	def fullSolve(self):
 		if (not self.enoughValues(self.puzzle)):
-			self.__draw_error()
+			self.draw_error()
 			return
 
 		self.solveBoard(self.puzzle)
-		self.__draw_puzzle()
+		self.draw_puzzle()
 
 	def positionSolve(self):
 		if (not self.enoughValues(self.puzzle)):
-			self.__draw_error()
+			self.draw_error()
 			return
 
 		x = int(self.row)
@@ -294,7 +294,7 @@ class Application(tk.Frame):
 		board = self.deepCopy(self.puzzle)
 		self.solveBoard(board)
 		self.puzzle[x][y] = board[x][y]
-		self.__draw_puzzle()
+		self.draw_puzzle()
 
 root = tk.Tk()
 root.title("Sudoku Solver")
