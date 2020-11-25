@@ -270,7 +270,7 @@ class Application(tk.Frame):
 				if (board[i][j] > 0):
 					x += 1
 
-		return (True if x >= 0 else False)
+		return (True if x >= 20 else False)
 
 	def clear(self):
 		self.puzzle = self.deepCopy(self.original)
